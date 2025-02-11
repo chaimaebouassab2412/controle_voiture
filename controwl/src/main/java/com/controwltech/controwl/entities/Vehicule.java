@@ -28,7 +28,7 @@ public class Vehicule {
     private double puissance;
 
     @ManyToOne
-    private Utilisateur proprietaire;
+    private Utilisateur utilisateur;
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
     private List<Assurance> assurances;
 

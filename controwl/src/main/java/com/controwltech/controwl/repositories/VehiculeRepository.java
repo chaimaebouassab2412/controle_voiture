@@ -14,15 +14,15 @@ import java.util.Date;
 
 @Repository
 public interface VehiculeRepository extends JpaRepository<Vehicule, Long> {
-    @Query("SELECT u FROM Utilisateur u WHERE u.id = :id")
-    Utilisateur findUtilisateurById(@Param("id") Long id);
+    //@Query("SELECT u FROM Utilisateur u WHERE u.id = :id")
+    //Utilisateur findUtilisateurById(@Param("id") Long id);
 
 
     // Trouver un véhicule par son numéro de chassis
     Optional<Vehicule> findByNumeroChassis(String numeroChassis);
 
     // Récupérer les véhicules d'un utilisateur
-    List<Vehicule> findByProprietaireIdUtilisateur(Long idUtilisateur);
+    List<Vehicule> findByProprietaireId(Long id);
 
     // Lister tous les véhicules d'une marque spécifique
     List<Vehicule> findByMarqueIgnoreCase(String marque);

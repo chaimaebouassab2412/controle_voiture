@@ -3,6 +3,7 @@ package com.controwltech.controwl;
 import com.controwltech.controwl.entities.Utilisateur;
 import com.controwltech.controwl.entities.Vehicule;
 import com.controwltech.controwl.repositories.UtilisateurRepository;
+import com.controwltech.controwl.repositories.VehiculeRepository;
 import com.controwltech.controwl.service.VehiculeService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,26 +20,26 @@ public class ControwlApplication {
 	}
 
 	@Bean
-	CommandLineRunner start(VehiculeService vehiculeService, UtilisateurRepository utilisateurRepository) {
+	CommandLineRunner start(UtilisateurRepository utilisateurRepository, VehiculeService vehiculeService) {
 		return args -> {
 			// Add Users (Utilisateurs) if they don't exist
-			if (!utilisateurRepository.existsById(1L)) {
+
 				Utilisateur user1 = new Utilisateur();
-				user1.setNom("Youssef");
+				user1.setNom("drysyrde");
 				user1.setEmail("youssef@example.com");
 				user1.setMdp("password123");
 				utilisateurRepository.save(user1);
-			}
 
-			if (!utilisateurRepository.existsById(2L)) {
+
+
 				Utilisateur user2 = new Utilisateur();
 				user2.setNom("Amina");
 				user2.setEmail("amina@example.com");
 				user2.setMdp("securepassword");
 				utilisateurRepository.save(user2);
-			}
 
-			// Fetch a user to associate with vehicles
+
+			 //Fetch a user to associate with vehicles
 			Utilisateur proprietaire = utilisateurRepository.findById(1L).orElseThrow(() ->
 					new RuntimeException("Utilisateur not found"));
 
@@ -55,9 +56,12 @@ public class ControwlApplication {
 
 				// Associate user with the vehicle
 				vehicule.setProprietaire(proprietaire);
+				proprietaire.getVehicules().add(vehicule);
+
 
 				vehiculeService.addVehicule(vehicule);
 			});
+			utilisateurRepository.save(proprietaire);
 		};
 	}
 }

@@ -1,6 +1,8 @@
 package com.controwltech.controwl.entities;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,8 +15,8 @@ public class Utilisateur {
     private String email;
     private String motDePasse;
 
-    @OneToMany(mappedBy = "proprietaire", cascade = CascadeType.ALL)
-    private List<Vehicule> vehicules;
+    @OneToMany(mappedBy = "proprietaire", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Vehicule> vehicules = new ArrayList<>();
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
     private List<Notification> notifications;
     public Utilisateur() {}
