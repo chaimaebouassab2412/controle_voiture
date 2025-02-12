@@ -2,7 +2,6 @@ package com.controwltech.controwl.service.init;
 
 import com.controwltech.controwl.entities.*;
 import com.controwltech.controwl.repositories.*;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +9,6 @@ import java.util.Date;
 import java.util.Random;
 
 @Service
-@AllArgsConstructor
 @Transactional
 public class VoitureInit {
 
@@ -22,39 +20,53 @@ public class VoitureInit {
     private final NotificationRepository notificationRepository;
     private final ScanTonobilRepository scanTonobilRepository;
 
+    // Constructor for dependency injection
+    public VoitureInit(UtilisateurRepository utilisateurRepository,
+                       VehiculeRepository vehiculeRepository,
+                       AssuranceRepository assuranceRepository,
+                       ControleTechniqueRepository controleTechniqueRepository,
+                       HistoriqueRepository historiqueRepository,
+                       NotificationRepository notificationRepository,
+                       ScanTonobilRepository scanTonobilRepository) {
+        this.utilisateurRepository = utilisateurRepository;
+        this.vehiculeRepository = vehiculeRepository;
+        this.assuranceRepository = assuranceRepository;
+        this.controleTechniqueRepository = controleTechniqueRepository;
+        this.historiqueRepository = historiqueRepository;
+        this.notificationRepository = notificationRepository;
+        this.scanTonobilRepository = scanTonobilRepository;
+    }
+
     public void initUtilisateurs() {
-        Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setNom("John Doe");
-        utilisateur.setEmail("john.doe@example.com");
-        utilisateur.setMotDePasse("password");
-        utilisateurRepository.save(utilisateur);
+        Utilisateur user1 = new Utilisateur();
+        user1.setNom("John Doe");
+        user1.setEmail("john.doe@example.com");
+        user1.setMotDePasse("password123");
+        utilisateurRepository.save(user1);
 
-        utilisateur = new Utilisateur();
-        utilisateur.setNom("Jane Smith");
-        utilisateur.setEmail("jane.smith@example.com");
-        utilisateur.setMotDePasse("password");
-        utilisateurRepository.save(utilisateur);
+        Utilisateur user2 = new Utilisateur();
+        user2.setNom("Jane Smith");
+        user2.setEmail("jane.smith@example.com");
+        user2.setMotDePasse("password456");
+        utilisateurRepository.save(user2);
 
-        utilisateur = new Utilisateur();
-        utilisateur.setNom("Alice Johnson");
-        utilisateur.setEmail("alice.johnson@example.com");
-        utilisateur.setMotDePasse("password");
-        utilisateurRepository.save(utilisateur);
+        Utilisateur user3 = new Utilisateur();
+        user3.setNom("Alice Johnson");
+        user3.setEmail("alice.johnson@example.com");
+        user3.setMotDePasse("password789");
+        utilisateurRepository.save(user3);
     }
 
     public void initVehicules() {
-        utilisateurRepository.findAll().forEach(utilisateur -> {
-            for (int i = 1; i <= 3; i++) {
+        utilisateurRepository.findAll().forEach(user -> {
+            for (int i = 1; i <= 2; i++) {
                 Vehicule vehicule = new Vehicule();
-                vehicule.setMarque("Toyota" + i);
-                vehicule.setModele("Corolla" + i);
-                vehicule.setImmatriculation("XYZ" + i);
+                vehicule.setMarque("Toyota");
+                vehicule.setModele("Corolla " + i);
+                vehicule.setImmatriculation("ABC-123" + i);
                 vehicule.setTypeCarburant("Essence");
                 vehicule.setNombrePlaces(5);
-                vehicule.setPoidsAVide(1200);
-                vehicule.setCapaciteReservoir(50);
-                vehicule.setPuissance(130);
-                vehicule.setUtilisateur(utilisateur);
+                vehicule.setUtilisateur(user);
                 vehiculeRepository.save(vehicule);
             }
         });
@@ -65,8 +77,8 @@ public class VoitureInit {
             Assurance assurance = new Assurance();
             assurance.setCompagnie("AXA");
             assurance.setDateDebut(new Date());
-            assurance.setDateFin(new Date());
-            assurance.setMontant(5000);
+            assurance.setDateFin(new Date(System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000)); // +1 year
+            assurance.setMontant(2000.0);
             assurance.setVehicule(vehicule);
             assuranceRepository.save(assurance);
         });
@@ -74,10 +86,10 @@ public class VoitureInit {
 
     public void initControlesTechniques() {
         vehiculeRepository.findAll().forEach(vehicule -> {
-            ControleTechnique controle = new ControleTechnique();
-            controle.setResultat("Validé");
-            controle.setVehicule(vehicule);
-            controleTechniqueRepository.save(controle);
+            ControleTechnique controleTechnique = new ControleTechnique();
+            controleTechnique.setResultat("Validé");
+            controleTechnique.setVehicule(vehicule);
+            controleTechniqueRepository.save(controleTechnique);
         });
     }
 
@@ -86,19 +98,19 @@ public class VoitureInit {
             Historique historique = new Historique();
             historique.setTypeService("Révision générale");
             historique.setDate(new Date());
-            historique.setDescription("Vidange et changement des filtres");
+            historique.setDescription("Vidange et changement de filtres");
             historique.setVehicule(vehicule);
             historiqueRepository.save(historique);
         });
     }
 
     public void initNotifications() {
-        utilisateurRepository.findAll().forEach(utilisateur -> {
+        utilisateurRepository.findAll().forEach(user -> {
             Notification notification = new Notification();
             notification.setType("Assurance");
-            notification.setMessage("Votre assurance expire bientôt");
+            notification.setMessage("Votre assurance arrive bientôt à expiration.");
             notification.setDateEnvoi(new Date());
-            notification.setUtilisateur(utilisateur);
+            notification.setUtilisateur(user);
             notificationRepository.save(notification);
         });
     }
@@ -107,7 +119,7 @@ public class VoitureInit {
         vehiculeRepository.findAll().forEach(vehicule -> {
             ScanTonobile scan = new ScanTonobile();
             scan.setDocumentScanne("carte_grise.pdf");
-            scan.setResultatOCR("123456ABC");
+            scan.setResultatOCR("XYZ-123456");
             scan.setVehicule(vehicule);
             scanTonobilRepository.save(scan);
         });
