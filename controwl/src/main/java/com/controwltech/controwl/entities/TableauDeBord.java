@@ -1,4 +1,5 @@
 package com.controwltech.controwl.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -11,10 +12,10 @@ public class TableauDeBord {
 
     @OneToOne
     private Utilisateur utilisateur;
-
+    @JsonIgnore
     @OneToMany
     private List<Notification> listNotifications;
-
+    @JsonIgnore
     @OneToMany
     private List<Vehicule> listVehicles;
 }

@@ -15,7 +15,7 @@ public class ScanTonobilController {
     @Autowired
     private ScanTonobilService scanTonobilService;
 
-    @GetMapping
+    @GetMapping("scans")
     public List<ScanTonobile> getAllScans() {
         return scanTonobilService.getAllScans();
     }

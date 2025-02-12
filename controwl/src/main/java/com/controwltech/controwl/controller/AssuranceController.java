@@ -14,7 +14,7 @@ public class AssuranceController {
     @Autowired
     private AssuranceService assuranceService;
 
-    @GetMapping
+    @GetMapping("all")
     public List<Assurance> getAllAssurances() {
         return assuranceService.getAllAssurances();
     }
