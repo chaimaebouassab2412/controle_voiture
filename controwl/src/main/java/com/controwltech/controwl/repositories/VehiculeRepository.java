@@ -22,7 +22,7 @@ public interface VehiculeRepository extends JpaRepository<Vehicule, Long> {
     Optional<Vehicule> findByNumeroChassis(String numeroChassis);
 
     // Récupérer les véhicules d'un utilisateur
-    List<Vehicule> findByProprietaireId(Long id);
+    //List<Vehicule> findByUt(Long id);
 
     // Lister tous les véhicules d'une marque spécifique
     List<Vehicule> findByMarqueIgnoreCase(String marque);

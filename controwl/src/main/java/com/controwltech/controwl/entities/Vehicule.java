@@ -1,10 +1,8 @@
 package com.controwltech.controwl.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +10,7 @@ import java.util.List;
 
 
 @Entity
-@Data @AllArgsConstructor @Setter @Getter
+@Data @AllArgsConstructor  @NoArgsConstructor
 public class Vehicule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,17 +24,33 @@ public class Vehicule {
     private double poidsAVide;
     private double capaciteReservoir;
     private double puissance;
-
+    private double kilometrage;
+    private String couleur;
+    private int annee;
+    private String immatriculation;
+    private String statut;
+    @JsonIgnore
     @ManyToOne
     private Utilisateur utilisateur;
+    @JsonIgnore
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
     private List<Assurance> assurances;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
     private List<Historique> historiques;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
     private List<ControleTechnique> controlesTechniques;
+    @Temporal(TemporalType.DATE)
+    private Date dateAchat;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getMarque() {
         return marque;
@@ -102,14 +116,6 @@ public class Vehicule {
         this.puissance = puissance;
     }
 
-    public Date getDateAchat() {
-        return dateAchat;
-    }
-
-    public void setDateAchat(Date dateAchat) {
-        this.dateAchat = dateAchat;
-    }
-
     public double getKilometrage() {
         return kilometrage;
     }
@@ -150,16 +156,43 @@ public class Vehicule {
         this.statut = statut;
     }
 
-    @Temporal(TemporalType.DATE)
-    private Date dateAchat;
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
 
-    private double kilometrage;
-    private String couleur;
-    private int annee;
-    private String immatriculation;
-    private String statut;
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
 
+    public List<Assurance> getAssurances() {
+        return assurances;
+    }
 
-    public void setProprietaire(Utilisateur utilisateurById) {
+    public void setAssurances(List<Assurance> assurances) {
+        this.assurances = assurances;
+    }
+
+    public List<Historique> getHistoriques() {
+        return historiques;
+    }
+
+    public void setHistoriques(List<Historique> historiques) {
+        this.historiques = historiques;
+    }
+
+    public List<ControleTechnique> getControlesTechniques() {
+        return controlesTechniques;
+    }
+
+    public void setControlesTechniques(List<ControleTechnique> controlesTechniques) {
+        this.controlesTechniques = controlesTechniques;
+    }
+
+    public Date getDateAchat() {
+        return dateAchat;
+    }
+
+    public void setDateAchat(Date dateAchat) {
+        this.dateAchat = dateAchat;
     }
 }
