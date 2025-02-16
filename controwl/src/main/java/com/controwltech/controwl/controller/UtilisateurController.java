@@ -65,7 +65,7 @@ public class UtilisateurController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO loginDTO) {
         try {
-            Utilisateur utilisateur = utilisateurService.authenticateUser(loginDTO);
+            Utilisateur utilisateur = utilisateurService.loginUser(loginDTO);
             
             String token = jwtUtil.generateToken(
                 utilisateur.getEmail(), 

@@ -1,6 +1,8 @@
 package com.controwltech.controwl.controller;
 
 import com.controwltech.controwl.dto.UserManagementDTO;
+import com.controwltech.controwl.dto.UserRegistrationDTO;
+import com.controwltech.controwl.entities.Utilisateur;
 import com.controwltech.controwl.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +23,8 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserManagementDTO>> getAllUsers() {
-        List<UserManagementDTO> users = utilisateurService.getAllUsers();
+    public ResponseEntity<List<Utilisateur>> getAllUsers() {
+        List<Utilisateur> users = utilisateurService.getAllUtilisateurs();
         return ResponseEntity.ok(users);
     }
 
@@ -34,6 +36,16 @@ public class AdminController {
             UserManagementDTO updatedUser = utilisateurService.updateUserByAdmin(id, userDTO);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/users/admin")
+    public ResponseEntity<UserManagementDTO> createAdminUser(@RequestBody UserRegistrationDTO userDTO) {
+        try {
+            UserManagementDTO newAdmin = utilisateurService.createAdminUser(userDTO);
+            return ResponseEntity.ok(newAdmin);
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }

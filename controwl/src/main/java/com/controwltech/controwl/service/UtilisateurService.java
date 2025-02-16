@@ -1,23 +1,28 @@
 package com.controwltech.controwl.service;
 
 import com.controwltech.controwl.dto.UserLoginDTO;
+import com.controwltech.controwl.dto.UserManagementDTO;
 import com.controwltech.controwl.dto.UserRegistrationDTO;
+import com.controwltech.controwl.entities.UserRole;
 import com.controwltech.controwl.entities.Utilisateur;
+import com.controwltech.controwl.mappers.UtilisateurMapper;
 import com.controwltech.controwl.repositories.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import com.controwltech.controwl.dto.UserManagementDTO;
 
 @Service
 public class UtilisateurService {
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+    @Autowired
+    @Lazy
+    private UtilisateurMapper utilisateurMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder; // Encrypt passwords
@@ -57,32 +62,63 @@ public class UtilisateurService {
     }
 
     // Login user
-    public boolean loginUser(UserLoginDTO userDTO) {
+    public Utilisateur loginUser(UserLoginDTO userDTO) {
         Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findByEmail(userDTO.getEmail());
         if (utilisateurOptional.isPresent()) {
             Utilisateur utilisateur = utilisateurOptional.get();
             // Validate password
-            return passwordEncoder.matches(userDTO.getMotDePasse(), utilisateur.getMotDePasse());
+            if (passwordEncoder.matches(userDTO.getMotDePasse(), utilisateur.getMotDePasse())) {
+                return utilisateur; // Return the user if email and password match
+            } else {
+                throw new IllegalArgumentException("Mot de passe incorrect");
+            }
         }
-        return false; // Return false if user not found or password mismatch
+        throw new IllegalArgumentException("Utilisateur non trouvé"); // Throw exception if user is not found
     }
 
-    public List<UserManagementDTO> getAllUsers() {
-        return utilisateurRepository.findAll().stream()
-                .map(this::convertToUserManagementDTO)
-                .collect(Collectors.toList());
-    }
 
-    private UserManagementDTO convertToUserManagementDTO(Utilisateur utilisateur) {
-        UserManagementDTO dto = new UserManagementDTO();
-        dto.setId(utilisateur.getId());
-        dto.setNom(utilisateur.getNom());
-        dto.setEmail(utilisateur.getEmail());
-        dto.setRole(utilisateur.getRole());
-        dto.setActive(utilisateur.isActive());
-        return dto;
+    public UserManagementDTO createAdminUser(UserRegistrationDTO userDTO) {
+        if (utilisateurRepository.existsByEmail(userDTO.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setNom(userDTO.getNom());
+        utilisateur.setEmail(userDTO.getEmail());
+        utilisateur.setMotDePasse(passwordEncoder.encode(userDTO.getMotDePasse()));
+        utilisateur.setRole(UserRole.ADMIN);
+        utilisateur.setActive(true);  // Admin users are active by default
+
+        Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
+        return utilisateurMapper.UtilisateurToUserManagementDTO(savedUtilisateur);
     }
 
     public UserManagementDTO updateUserByAdmin(Long id, UserManagementDTO userDTO) {
+        Utilisateur utilisateur = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        
+        // Update user details
+        if (userDTO.getEmail() != null && !userDTO.getEmail().equals(utilisateur.getEmail())) {
+            if (utilisateurRepository.existsByEmail(userDTO.getEmail())) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+            utilisateur.setEmail(userDTO.getEmail());
+        }
+        
+        if (userDTO.getNom() != null) {
+            utilisateur.setNom(userDTO.getNom());
+        }
+        
+        if (userDTO.getRole() != null) {
+            utilisateur.setRole(userDTO.getRole());
+        }
+        
+        utilisateur.setActive(userDTO.isActive());
+        
+        // Save updated user
+        Utilisateur updatedUtilisateur = utilisateurRepository.save(utilisateur);
+        
+        // Convert and return updated user as DTO
+        return utilisateurMapper.UtilisateurToUserManagementDTO(updatedUtilisateur);
     }
 }
