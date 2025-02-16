@@ -28,6 +28,11 @@ public class Utilisateur {
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
     private List<Notification> notifications;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.USER; // Default role
+    
+    private boolean isActive = false; // Account verification status
+
     // ✅ Constructor without parameters
     public Utilisateur() {}
 
@@ -86,5 +91,21 @@ public class Utilisateur {
 
     public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+    
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

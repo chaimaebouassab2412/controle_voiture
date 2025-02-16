@@ -40,18 +40,18 @@ public class VoitureInit {
     public void initUtilisateurs() {
         Utilisateur user1 = new Utilisateur();
         user1.setNom("John Doe");
-        user1.setEmail("john.doe@example.com");
-        user1.setMotDePasse("password123");
+        user1.setEmail("john.doey@example.com");
+        user1.setMotDePasse("passwkgord123");
         utilisateurRepository.save(user1);
 
         Utilisateur user2 = new Utilisateur();
-        user2.setNom("Jane Smith");
-        user2.setEmail("jane.smith@example.com");
-        user2.setMotDePasse("password456");
+        user2.setNom("salmaaa Smith");
+        user2.setEmail("salmaa.smith@example.com");
+        user2.setMotDePasse("pa58ssword456");
         utilisateurRepository.save(user2);
 
         Utilisateur user3 = new Utilisateur();
-        user3.setNom("Alice Johnson");
+        user3.setNom("ahmed Johnson");
         user3.setEmail("alice.johnson@example.com");
         user3.setMotDePasse("password789");
         utilisateurRepository.save(user3);

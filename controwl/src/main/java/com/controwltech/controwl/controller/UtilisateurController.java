@@ -18,12 +18,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import com.controwltech.controwl.security.JwtUtil;
+import com.controwltech.controwl.dto.LoginResponseDTO;
+import org.springframework.http.HttpStatus;
+
 @RestController
 @RequestMapping("/api/utilisateurs")
 public class UtilisateurController {
 
+    private final UtilisateurService utilisateurService;
+    private final JwtUtil jwtUtil;
+
     @Autowired
-    private UtilisateurService utilisateurService;
+    public UtilisateurController(UtilisateurService utilisateurService, JwtUtil jwtUtil) {
+        this.utilisateurService = utilisateurService;
+        this.jwtUtil = jwtUtil;
+    }
 
     // Get all users
     @GetMapping("/users")
@@ -53,15 +63,27 @@ public class UtilisateurController {
     // Login user
     // Login endpoint without JWT
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO userDTO) {
-        boolean isAuthenticated = utilisateurService.loginUser(userDTO); // Updated to return a boolean
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(401).body("Invalid email or password");
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO loginDTO) {
+        try {
+            Utilisateur utilisateur = utilisateurService.authenticateUser(loginDTO);
+            
+            String token = jwtUtil.generateToken(
+                utilisateur.getEmail(), 
+                utilisateur.getRole().toString()
+            );
+            
+            LoginResponseDTO response = new LoginResponseDTO(
+                token,
+                utilisateur.getEmail(),
+                utilisateur.getRole().toString()
+            );
+            
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(e.getMessage());
         }
     }
-
 
     // Logout user
     @PostMapping("/logout")

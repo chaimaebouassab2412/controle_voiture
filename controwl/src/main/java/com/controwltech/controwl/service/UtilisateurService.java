@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import com.controwltech.controwl.dto.UserManagementDTO;
 
 @Service
 public class UtilisateurService {
@@ -65,5 +67,22 @@ public class UtilisateurService {
         return false; // Return false if user not found or password mismatch
     }
 
+    public List<UserManagementDTO> getAllUsers() {
+        return utilisateurRepository.findAll().stream()
+                .map(this::convertToUserManagementDTO)
+                .collect(Collectors.toList());
+    }
 
+    private UserManagementDTO convertToUserManagementDTO(Utilisateur utilisateur) {
+        UserManagementDTO dto = new UserManagementDTO();
+        dto.setId(utilisateur.getId());
+        dto.setNom(utilisateur.getNom());
+        dto.setEmail(utilisateur.getEmail());
+        dto.setRole(utilisateur.getRole());
+        dto.setActive(utilisateur.isActive());
+        return dto;
+    }
+
+    public UserManagementDTO updateUserByAdmin(Long id, UserManagementDTO userDTO) {
+    }
 }

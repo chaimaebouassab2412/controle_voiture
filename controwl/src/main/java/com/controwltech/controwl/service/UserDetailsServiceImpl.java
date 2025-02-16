@@ -24,8 +24,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return User.withUsername(utilisateur.getEmail())
-                .password(utilisateur.getMotDePasse()) // Assuming password is stored as hashed
-                .roles("USER") // You can modify this based on roles stored in DB
+                .password(utilisateur.getMotDePasse())
+                .roles(utilisateur.getRole().name())
                 .build();
     }
 }
