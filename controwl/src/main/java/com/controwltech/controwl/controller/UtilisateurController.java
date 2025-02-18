@@ -4,6 +4,7 @@ import com.controwltech.controwl.dto.UserLoginDTO;
 import com.controwltech.controwl.dto.UserRegistrationDTO;
 import com.controwltech.controwl.entities.Utilisateur;
 import com.controwltech.controwl.service.UtilisateurService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -100,8 +101,28 @@ public class UtilisateurController {
 
     // Delete a user by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUtilisateur(@PathVariable Long id) {
-        utilisateurService.deleteUtilisateur(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteUtilisateur(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        if (token == null || token.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        try {
+            Claims claims = jwtUtil.getClaimsFromToken(token);
+
+            String role = claims.get("role", String.class);
+            if ("ADMIN".equals(role)) {
+                utilisateurService.deleteUtilisateur(id);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
+
 }
