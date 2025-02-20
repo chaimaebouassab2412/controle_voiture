@@ -11,9 +11,10 @@ import com.controwltech.controwl.entities.Utilisateur;
 import java.util.List;
 import java.util.Optional;
 import java.util.Date;
+import java.util.UUID;
 
 @Repository
-public interface VehiculeRepository extends JpaRepository<Vehicule, Long> {
+public interface VehiculeRepository extends JpaRepository<Vehicule, UUID> {
     //@Query("SELECT u FROM Utilisateur u WHERE u.id = :id")
     //Utilisateur findUtilisateurById(@Param("id") Long id);
 

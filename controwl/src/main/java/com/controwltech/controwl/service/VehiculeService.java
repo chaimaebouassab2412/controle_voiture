@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VehiculeService {
@@ -17,7 +18,7 @@ public class VehiculeService {
         return "Succeed";
     }
 
-    public Vehicule getVehicleById(Long id) {
+    public Vehicule getVehicleById(UUID id) {
         return vehiculeRepository.findById(id).orElse(null);
     }
 
@@ -25,7 +26,7 @@ public class VehiculeService {
         return vehiculeRepository.save(vehicule);
     }
 
-    public void deleteVehicle(Long id) {
+    public void deleteVehicle(UUID id) {
         vehiculeRepository.deleteById(id);
     }
 

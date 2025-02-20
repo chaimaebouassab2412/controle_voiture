@@ -9,7 +9,6 @@ public class TableauDeBord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @OneToOne
     private Utilisateur utilisateur;
     @JsonIgnore
