@@ -11,8 +11,8 @@ import java.util.List;
 public class Utilisateur {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Changed to Long ID with auto-increment
+    private Long id;  // Changed from UUID to Long
 
     private String nom;
     private String email;
@@ -30,7 +30,7 @@ public class Utilisateur {
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER; // Default role
-    
+
     private boolean isActive = false; // Account verification status
 
     // ✅ Constructor without parameters
@@ -45,11 +45,11 @@ public class Utilisateur {
 
     // ✅ Getters and Setters (Manually Added)
 
-    public Long getId() {
+    public Long getId() {  // Changed return type from UUID to Long
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id) {  // Changed parameter type from UUID to Long
         this.id = id;
     }
 
@@ -100,7 +100,7 @@ public class Utilisateur {
     public void setRole(UserRole role) {
         this.role = role;
     }
-    
+
     public boolean isActive() {
         return isActive;
     }
@@ -108,6 +108,4 @@ public class Utilisateur {
     public void setActive(boolean active) {
         isActive = active;
     }
-
-
 }

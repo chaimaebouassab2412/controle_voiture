@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class VehiculeService {
@@ -18,15 +17,15 @@ public class VehiculeService {
         return "Succeed";
     }
 
-    public Vehicule getVehicleById(UUID id) {
-        return vehiculeRepository.findById(id).orElse(null);
+    public Vehicule getVehicleById(Long id) {
+        return (Vehicule) vehiculeRepository.findById(id).orElse(null);
     }
 
     public Vehicule saveVehicle(Vehicule vehicule) {
         return vehiculeRepository.save(vehicule);
     }
 
-    public void deleteVehicle(UUID id) {
+    public void deleteVehicle(Long id) {
         vehiculeRepository.deleteById(id);
     }
 

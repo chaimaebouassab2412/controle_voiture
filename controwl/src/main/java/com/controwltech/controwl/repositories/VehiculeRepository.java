@@ -30,5 +30,9 @@ public interface VehiculeRepository extends JpaRepository<Vehicule, UUID> {
 
     // Trouver les véhicules dont la date d'achat est avant une certaine date
     List<Vehicule> findByDateAchatBefore(Date date);
+
+    Optional<Object> findById(Long id);
+
+    void deleteById(Long id);
 }
 
