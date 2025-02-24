@@ -14,12 +14,12 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
+                        .allowedOriginPatterns("*") // Accepte toutes les origines dynamiquement
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-                        .allowedHeaders("Authorization", "Content-Type", "X-Requested-With")
+                        .allowedHeaders("*") // Accepte tous les headers
                         .exposedHeaders("Authorization")
-                        .allowCredentials(true)
-                        .maxAge(3600); // 1 hour
+                        .allowCredentials(true) // Permet les cookies et tokens sécurisés
+                        .maxAge(3600);
             }
         };
     }

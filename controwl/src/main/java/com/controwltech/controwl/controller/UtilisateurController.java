@@ -67,22 +67,23 @@ public class UtilisateurController {
     public ResponseEntity<?> login(@RequestBody UserLoginDTO loginDTO) {
         try {
             Utilisateur utilisateur = utilisateurService.loginUser(loginDTO);
-            
+
             String token = jwtUtil.generateToken(
-                utilisateur.getEmail(), 
-                utilisateur.getRole().toString()
+                    utilisateur.getEmail(),
+                    utilisateur.getRole().toString()
             );
-            
+
             LoginResponseDTO response = new LoginResponseDTO(
-                token,
-                utilisateur.getEmail(),
-                utilisateur.getRole().toString()
+                    token,
+                    utilisateur.getEmail(),
+                    utilisateur.getRole().toString(),
+                    utilisateur.getNom()
             );
-            
+
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(e.getMessage());
+                    .body(e.getMessage());
         }
     }
 
